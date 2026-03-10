@@ -20,10 +20,30 @@ let historyStack = [];
 let pending = { Y: null, K: null };
 
 const q = id => document.getElementById(id);
+let clearConfirmResolver = null;
 const fmtMoney = n => '₹ ' + Number(n || 0).toLocaleString('en-IN');
 const clone = obj => JSON.parse(JSON.stringify(obj));
 
 function freshNumber(){ return { status:'I', step:0, ladder:1, activeAt:null, prevLoss:0, winningBet:0, lastNet:0, pendingSecond:false }; }
+
+function askClearKumbh(){
+  return new Promise(resolve=>{
+    clearConfirmResolver = resolve;
+    q('confirmOverlay').classList.remove('hidden');
+    q('confirmOverlay').setAttribute('aria-hidden','false');
+    q('confirmOkBtn').focus();
+  });
+}
+
+function closeClearKumbh(answer){
+  q('confirmOverlay').classList.add('hidden');
+  q('confirmOverlay').setAttribute('aria-hidden','true');
+  if(clearConfirmResolver){
+    const resolve = clearConfirmResolver;
+    clearConfirmResolver = null;
+    resolve(answer);
+  }
+}
 function createSide(){ const s={}; for(let i=1;i<=9;i++) s[i]=freshNumber(); return s; }
 function roundUpToCoin(value, coin){ return Math.max(coin, Math.ceil(value / coin) * coin); }
 
@@ -120,7 +140,7 @@ function renderActiveTab(){ document.querySelectorAll('.screen').forEach(s=>s.cl
 function renderAll(){ renderActiveTab(); renderBoards(); renderVyuha(); renderSangram(); renderGranth(); renderDrishti(); renderSopana(); renderYantra(); renderMedha(); saveState(); }
 
 function startPrayoga(){ if(state.currentChakra!==0 || currentKumbh()?.rows?.length){ state.currentKumbhId=null; } const kumbh=ensureKumbh(); state.activeTab='sangram'; renderAll(); showToast('SANGRAM AARAMBHA', `#${String(kumbh.id).padStart(2,'0')} Kumbh ready`); }
-function clearCurrentSession(){ if(!window.confirm('Clear current Kumbh?')) return; state.liveBankroll=state.settings.bankroll; state.currentChakra=0; state.numbers={Y:createSide(),K:createSide()}; state.drishti=[]; state.summary={totalAhuti:0,maxExposure:0}; pending={Y:null,K:null}; state.currentKumbhId=null; const kumbh=ensureKumbh(); state.activeTab='sangram'; renderAll(); showToast('KUMBHA SHUDDHI',`#${String(kumbh.id).padStart(2,'0')} Kumbh ready`); }
+async function clearCurrentSession(){ if(!(await askClearKumbh())) return; state.liveBankroll=state.settings.bankroll; state.currentChakra=0; state.numbers={Y:createSide(),K:createSide()}; state.drishti=[]; state.summary={totalAhuti:0,maxExposure:0}; pending={Y:null,K:null}; state.currentKumbhId=null; const kumbh=ensureKumbh(); state.activeTab='sangram'; renderAll(); showToast('KUMBHA SHUDDHI',`#${String(kumbh.id).padStart(2,'0')} Kumbh ready`); }
 function recordSnapshot(){ historyStack.push(JSON.stringify(state)); if(historyStack.length>20) historyStack.shift(); }
 function undoLast(){ const prev=historyStack.pop(); if(!prev) return; state=reviveState(JSON.parse(prev)); renderAll(); showToast('CHAKRA PUNARAVRITTI','Last chakra reverted'); }
 
@@ -173,6 +193,10 @@ function setupControls(){
   q('exportCsvBtn').addEventListener('click', exportDrishtiCsv); q('loadCsvBtn').addEventListener('click', ()=>q('loadCsvFile').click()); q('loadCsvFile').addEventListener('change', importDrishtiCsv);
   q('exportGranthBtn').addEventListener('click', exportGranthJson); q('importGranthBtn').addEventListener('click', ()=>q('importGranthFile').click()); q('importGranthFile').addEventListener('change', importGranthJson);
   q('deleteGranthBtn').addEventListener('click', ()=>{ state.granth=[]; state.currentKumbhId=null; renderAll(); showToast('GRANTH PURGED','All Kumbh history removed'); });
+  q('confirmCancelBtn').addEventListener('click', ()=>closeClearKumbh(false));
+  q('confirmOkBtn').addEventListener('click', ()=>closeClearKumbh(true));
+  q('confirmOverlay').addEventListener('click', e=>{ if(e.target===q('confirmOverlay')) closeClearKumbh(false); });
+  document.addEventListener('keydown', e=>{ if(q('confirmOverlay').classList.contains('hidden')) return; if(e.key==='Escape') closeClearKumbh(false); });
 }
 
 if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{})); }
