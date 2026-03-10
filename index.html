@@ -39,6 +39,11 @@
         </section>
 
         <section class="card compact-card">
+          <div class="label">LAST RESULT</div>
+          <div id="lastResultValue" class="last-result">-</div>
+        </section>
+
+        <section class="card compact-card">
           <div class="label">NEXT ĀHUTI</div>
           <div id="nextY" class="ahuti-row">Y -</div>
           <div id="nextK" class="ahuti-row">K -</div>
@@ -72,10 +77,11 @@
           <div class="toolbar">
             <div class="label">GRANTH</div>
             <div class="btn-row">
+              <button id="historyUndoBtn" type="button">Undo</button>
               <button id="exportGranthBtn" type="button">Export</button>
               <button id="importGranthBtn" type="button">Load</button>
               <button id="deleteGranthBtn" class="warn" type="button">Delete</button>
-              <input id="importGranthFile" type="file" accept="application/json" hidden>
+              <input id="importGranthFile" type="file" accept="application/json,.json,.csv,text/csv" hidden>
             </div>
           </div>
           <div id="granthList" class="granth-list"></div>
@@ -94,6 +100,7 @@
             <div class="label">NUMBER PERFORMANCE</div>
             <div class="btn-row">
               <button id="exportCsvBtn" type="button">Export CSV</button>
+              <button id="exportPdfBtn" type="button">Save PDF</button>
               <button id="loadCsvBtn" type="button">Load CSV</button>
               <input id="loadCsvFile" type="file" accept=".csv,text/csv" hidden>
             </div>
@@ -105,13 +112,20 @@
       <section id="screen-sopana" class="screen">
         <section class="card">
           <div class="toolbar">
-            <div class="label">SOPANA</div>
+            <div class="label">SOPANA - 1ST LADDER</div>
             <div class="btn-row">
               <button id="saveLadderBtn" type="button">Save</button>
               <button id="resetLadderBtn" type="button">Reset</button>
             </div>
           </div>
           <div class="table-wrap"><table id="ladderTable"><thead><tr><th>Step</th><th>Bet</th><th>Win Return</th><th>Net Profit</th><th>If Lose Total</th></tr></thead><tbody></tbody></table></div>
+        </section>
+        <section class="card compact-card">
+          <div class="toolbar">
+            <div class="label">SOPANA - 2ND LADDER</div>
+            <div class="label subtle-note">CAP loss + current 2nd ladder path</div>
+          </div>
+          <div class="table-wrap"><table id="secondLadderTable"><thead><tr><th>Step</th><th>Bet</th><th>Win Return</th><th>Net Profit</th><th>If Lose Total</th></tr></thead><tbody></tbody></table></div>
         </section>
       </section>
 
@@ -166,6 +180,19 @@
       </div>
     </div>
   </div>
+
+  <div id="exportOverlay" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+      <div id="exportTitle" class="modal-title">GRANTH EXPORT</div>
+      <div class="modal-text small">Choose export file type</div>
+      <div class="modal-actions wrap-actions start-actions">
+        <button id="exportJsonBtn" type="button">JSON</button>
+        <button id="exportHistoryCsvBtn" type="button">CSV</button>
+        <button id="exportCloseBtn" class="warn" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
