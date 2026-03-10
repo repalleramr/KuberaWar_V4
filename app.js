@@ -188,7 +188,7 @@ function renderAll(){ renderActiveTab(); renderBoards(); renderVyuha(); renderSa
 function startPrayoga(){ if(state.currentChakra!==0 || currentKumbh()?.rows?.length){ state.currentKumbhId=null; } const kumbh=ensureKumbh(); state.activeTab='sangram'; renderAll(); showToast('SANGRAM AARAMBHA', `#${String(kumbh.id).padStart(2,'0')} Kumbh ready`); }
 async function clearCurrentSession(){ if(!(await askClearKumbh())) return; state.liveBankroll=state.settings.bankroll; state.currentChakra=0; state.numbers={Y:createSide(),K:createSide()}; state.drishti=[]; state.summary={totalAhuti:0,maxExposure:0}; state.lastResult='-'; pending={Y:null,K:null}; state.currentKumbhId=null; const kumbh=ensureKumbh(); state.activeTab='sangram'; renderAll(); showToast('KUMBHA SHUDDHI',`#${String(kumbh.id).padStart(2,'0')} Kumbh ready`); }
 function recordSnapshot(){ historyStack.push(JSON.stringify(state)); if(historyStack.length>50) historyStack.shift(); }
-function undoLast(){ const prev=historyStack.pop(); if(!prev) return; state=reviveState(JSON.parse(prev)); pending={Y:null,K:null}; renderAll(); showToast('CHAKRA PUNARAVRITTI','Last chakra reverted'); }
+function undoLast(options={}){ const prev=historyStack.pop(); if(!prev) return; const preserveTab = options.preserveTab ? state.activeTab : null; state=reviveState(JSON.parse(prev)); if(preserveTab) state.activeTab = preserveTab; pending={Y:null,K:null}; renderAll(); showToast('CHAKRA PUNARAVRITTI','Last chakra reverted'); }
 
 function pushDrishti(rec){ state.drishti.push(rec); }
 function resolveNumber(side,num,notes){
@@ -358,8 +358,8 @@ function setupInstall(){ window.addEventListener('beforeinstallprompt',e=>{ e.pr
 function setupControls(){
   q('prayogaBtn').addEventListener('click', startPrayoga);
   q('kumbhaBtn').addEventListener('click', clearCurrentSession);
-  q('undoBtn').addEventListener('click', undoLast);
-  q('historyUndoBtn').addEventListener('click', undoLast);
+  q('undoBtn').addEventListener('click', ()=>undoLast());
+  q('historyUndoBtn').addEventListener('click', ()=>undoLast({ preserveTab:true }));
   q('setTargetDollar').addEventListener('input', ()=>recalcTargetLink('dollar'));
   q('setTargetPercent').addEventListener('input', ()=>recalcTargetLink('percent'));
   q('setBankroll').addEventListener('input', ()=>recalcTargetLink('dollar'));
