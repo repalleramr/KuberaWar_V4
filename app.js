@@ -137,10 +137,6 @@ function showToast(title, text, kind=''){
   setTimeout(() => el.remove(), 3800);
 }
 
-function confirmAction(message){
-  return window.confirm(message);
-}
-
 function injectKeyGlowStyles(){
   if(document.getElementById('kubera-keyglow-style')) return;
   const style = document.createElement('style');
@@ -311,25 +307,25 @@ function renderAll(){
 }
 
 function startPrayoga(){
-  state.currentKumbhId = null;
+  if(state.currentChakra !== 0 || currentKumbh()?.rows?.length){
+    state.currentKumbhId = null;
+  }
   const kumbh = ensureKumbh();
   state.activeTab = 'sangram';
   renderAll();
   showToast('SANGRAM AARAMBHA', `#${String(kumbh.id).padStart(2,'0')} Kumbh ready`);
 }
 function clearCurrentSession(){
-  if(!confirmAction('Clear current Kumbh?\n\nOK = clear and start new Kumbh\nCancel = keep current session')) return;
   state.liveBankroll = state.settings.bankroll;
   state.currentChakra = 0;
   state.numbers = { Y: createSide(), K: createSide() };
   state.drishti = [];
   state.summary = { totalAhuti: 0, maxExposure: 0 };
   pending = { Y: null, K: null };
-  state.currentKumbhId = null;
-  const kumbh = ensureKumbh();
-  state.activeTab = 'sangram';
+  const kumbh = currentKumbh();
+  if(kumbh) kumbh.rows = [];
   renderAll();
-  showToast('KUMBHA SHUDDHI', `#${String(kumbh.id).padStart(2,'0')} Kumbh started`);
+  showToast('KUMBHA SHUDDHI', 'Current session cleared');
 }
 function recordSnapshot(){
   historyStack.push(JSON.stringify(state));
