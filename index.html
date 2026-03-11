@@ -27,7 +27,7 @@
 
     <main class="content-pad">
       <section id="screen-sangram" class="screen active">
-        <section class="boards-compact">
+        <section class="boards-compact sangram-boards">
           <div class="board-block">
             <div class="board-title">Y</div>
             <div id="boardY" class="treasure-grid compact"></div>
@@ -38,6 +38,17 @@
           </div>
         </section>
 
+        <section class="action-strip compact-card">
+          <button id="kumbhaBtn" class="warn strip-btn" type="button">Clear Kumbha</button>
+          <button id="undoBtn" class="strip-btn" type="button">Undo</button>
+          <button id="prayogaBtn" class="strip-btn" type="button">Prayoga</button>
+        </section>
+
+        <section class="card compact-card">
+          <div class="label">LAST RESULT</div>
+          <div id="lastResultValue" class="last-result">-</div>
+        </section>
+
         <section class="card compact-card">
           <div class="label">NEXT ĀHUTI</div>
           <div id="nextY" class="ahuti-row">Y -</div>
@@ -45,16 +56,11 @@
           <div id="nextT" class="total">T 0</div>
         </section>
 
-        <section class="card compact-card">
-          <div class="chakra-line">
-            <div>
+        <section class="card compact-card chakra-card">
+          <div class="chakra-line chakra-right">
+            <div class="chakra-copy">
               <div class="label">CHAKRA</div>
               <div id="chakraValue" class="chakra-value">Round : 0</div>
-            </div>
-            <div class="controls compact-controls">
-              <button id="undoBtn" type="button">Undo</button>
-              <button id="kumbhaBtn" class="warn" type="button">Kumbha</button>
-              <button id="prayogaBtn" type="button">Prayoga</button>
             </div>
           </div>
         </section>
@@ -74,8 +80,9 @@
             <div class="btn-row">
               <button id="exportGranthBtn" type="button">Export</button>
               <button id="importGranthBtn" type="button">Load</button>
+              <select id="deleteKumbhSelect" class="toolbar-select"><option value="">Select Kumbh</option></select>
               <button id="deleteGranthBtn" class="warn" type="button">Delete</button>
-              <input id="importGranthFile" type="file" accept="application/json" hidden>
+              <input id="importGranthFile" type="file" accept="application/json,.csv,text/csv" hidden>
             </div>
           </div>
           <div id="granthList" class="granth-list"></div>
@@ -94,24 +101,34 @@
             <div class="label">NUMBER PERFORMANCE</div>
             <div class="btn-row">
               <button id="exportCsvBtn" type="button">Export CSV</button>
+              <button id="exportPdfBtn" type="button">Save PDF</button>
               <button id="loadCsvBtn" type="button">Load CSV</button>
               <input id="loadCsvFile" type="file" accept=".csv,text/csv" hidden>
             </div>
           </div>
-          <div class="table-wrap"><table id="drishtiTable"><thead><tr><th>Side</th><th>No</th><th>Act</th><th>Win</th><th>Steps</th><th>Prev Loss</th><th>Win Bet</th><th>Net P/L</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+          <div class="table-wrap compact-table"><table id="drishtiTable"><thead><tr><th>Side</th><th>No</th><th>Act</th><th>Win</th><th>Steps</th><th>Prev Loss</th><th>Win Bet</th><th>Net P/L</th><th>Status</th></tr></thead><tbody></tbody></table></div>
         </section>
       </section>
 
       <section id="screen-sopana" class="screen">
-        <section class="card">
+        <section class="card compact-sopana-card">
           <div class="toolbar">
-            <div class="label">SOPANA</div>
+            <div class="label">SOPANA - 1ST LADDER</div>
             <div class="btn-row">
               <button id="saveLadderBtn" type="button">Save</button>
+              <button id="loadLadderBtn" type="button">Load CSV</button>
               <button id="resetLadderBtn" type="button">Reset</button>
+              <input id="loadLadderFile" type="file" accept=".csv,text/csv" hidden>
             </div>
           </div>
-          <div class="table-wrap"><table id="ladderTable"><thead><tr><th>Step</th><th>Bet</th><th>Win Return</th><th>Net Profit</th><th>If Lose Total</th></tr></thead><tbody></tbody></table></div>
+          <div class="table-wrap compact-table"><table id="ladderTable"><thead><tr><th>Step</th><th>Bet</th><th>Win Return</th><th>Net Profit</th><th>If Lose Total</th></tr></thead><tbody></tbody></table></div>
+        </section>
+        <section class="card compact-card compact-sopana-card">
+          <div class="toolbar">
+            <div class="label">SOPANA - 2ND LADDER</div>
+            <div class="label subtle-note">Compact editable table</div>
+          </div>
+          <div class="table-wrap compact-table"><table id="secondLadderTable"><thead><tr><th>Step</th><th>Bet</th><th>Win Return</th><th>Net Profit</th><th>If Lose Total</th></tr></thead><tbody></tbody></table></div>
         </section>
       </section>
 
@@ -132,7 +149,7 @@
             <label><span>Max Steps</span><input id="setMaxSteps" type="number"></label>
             <label><span>Safety Reserve</span><input id="setReserve" type="number"></label>
             <label><span>CAP Rule</span><select id="setCapRule"><option value="on">ON</option><option value="off">OFF</option></select></label>
-            <label><span>Stop Loss / Number</span><input id="setStopLossPerNumber" type="number"></label>
+            <label><span>Stop Loss / Number</span><input id="setStopLossPerNumber" type="text" inputmode="numeric" placeholder="-100"></label>
           </div>
           <div class="save-wrap"><button id="applyYantraBtn" type="button">APPLY YANTRA</button></div>
         </section>
