@@ -38,15 +38,23 @@
           </div>
         </section>
 
-        <section class="action-strip compact-card">
-          <button id="kumbhaBtn" class="warn strip-btn" type="button">Clear Kumbha</button>
-          <button id="undoBtn" class="strip-btn" type="button">Undo</button>
-          <button id="prayogaBtn" class="strip-btn" type="button">Prayoga</button>
+        <section class="sangram-action-row compact-card">
+          <button id="kumbhaBtn" class="tile action-tile kumbha-tile" type="button"><span>Clear</span><span>Kumbha</span></button>
+          <div class="action-zero-slot"></div>
+          <button id="undoBtn" class="action-undo-btn" type="button">Undo</button>
+          <div class="action-zero-slot"></div>
+          <button id="prayogaBtn" class="tile action-tile prayoga-tile" type="button"><span>Prayoga</span></button>
         </section>
 
-        <section class="card compact-card">
-          <div class="label">LAST RESULT</div>
-          <div id="lastResultValue" class="last-result">-</div>
+        <section class="sangram-info-row compact-card">
+          <section class="card sangram-last-card">
+            <div class="label">LAST RESULT</div>
+            <div id="lastResultValue" class="last-result">-</div>
+          </section>
+          <section class="card sangram-chakra-card">
+            <div class="label">CHAKRA</div>
+            <div id="chakraValue" class="chakra-value">Round : 0</div>
+          </section>
         </section>
 
         <section class="card compact-card">
@@ -54,15 +62,6 @@
           <div id="nextY" class="ahuti-row">Y -</div>
           <div id="nextK" class="ahuti-row">K -</div>
           <div id="nextT" class="total">T 0</div>
-        </section>
-
-        <section class="card compact-card chakra-card">
-          <div class="chakra-line chakra-right">
-            <div class="chakra-copy">
-              <div class="label">CHAKRA</div>
-              <div id="chakraValue" class="chakra-value">Round : 0</div>
-            </div>
-          </div>
         </section>
       </section>
 
